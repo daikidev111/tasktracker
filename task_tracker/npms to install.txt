@@ -1,0 +1,5 @@
+npm i express mysql dotenv hbs
+npm i --save nodemon
+npm i bcryptjs cookie-parser jsonwebtoken
+npm i express-session
+npm i --S redis connect-redis

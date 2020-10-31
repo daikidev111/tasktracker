@@ -1,0 +1,91 @@
+nav {
+    background-color: royalblue;
+    color: white;
+    padding: 30px 60px;
+    display: flex;
+    justify-content: space-between;
+}
+
+nav ul{
+    display: flex;
+    justify-content: space-around;
+    
+}
+
+nav li{
+    list-style: none;
+    margin: 0px 20px
+}
+
+nav li a{
+    color: white;
+    margin: 0px 15px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+nav li a:hover{
+    color: black;
+    text-decoration: none;
+}
+
+.fail {
+    color: red;
+    break-after: always;
+}
+
+.success {
+    color:green;
+}
+.col {
+    padding: 25px;
+}
+
+#createProject_button {
+  /* margin-top: 40px;
+  margin-right: 40px; */
+  position: absolute;
+  right: 100px;
+  top: 10 px;
+  /* float: right; */
+}
+
+.card2 {
+    position: absolute;
+    top: 180px;
+    left: 400px;
+}
+
+.btn.btn-primary{
+    margin-right: 10px; 
+}
+
+.btn.btn-primary-red{
+    background-color: crimson;
+    color: white;
+}
+
+.btn.btn-primary-right{
+    background-color: crimson;
+    color: white;
+    font-size: large;
+    position: absolute;
+    right: 30px;
+}
+
+.btn.btn-secondary.right{
+    margin-left: 85%;
+}
+
+#col_num_comment{
+    width: 20%;
+
+}
+
+#comment_container{
+    width: 40%;
+}
+
+#col_context_comment{
+    width: 50%;
+}

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <nav>
+        <h4><img src="/images/MonashLogo.png" height="50px">&emsp; Student task tracker</h4>
+        <ul>
+            <li><a href="/create_project" class="btn btn-outline-light">Projects</a></li>
+            <li><a href="/delete_account" class="btn btn-outline-light">Delete Account</a></li>
+            <li>
+                <form action="/auth/logout" method="POST">
+                    <button type="submit" class="btn btn-outline-light">Log out</button>
+                </form>
+            </li>
+            <li><a href="/teacher_allocation" class="btn btn-outline-light">Teacher Allocation</a></li>
+        </ul>
+    </nav>
+    <div class="card">
+        <div class="card">
+            <h5 class="card-header"> {{data.project_name}}</h5>
+            <div class="card-body">
+                <h5 class="card-title">Description: </h5>
+                <p class="card-text">{{data.description}}</p>
+                <h5 class="card-title">Group Members: </h5>
+                <p class="card-text">{{data.allocated_students}}</p>
+                <br>
+                {{#if permission}}
+                <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#student_allocation"
+                    data-whatever="@mdo">
+                    Allocate Student
+                </button>
+                {{/if}}
+                <div class="modal fade" id="student_allocation" tabindex="-1" role="dialog"
+                    aria-labelledby="allocate_student_Label" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Allocating Students</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Username</th>
+                                            <th scope="col">Action</th>
+                                        </tr>
+                                    </thead>
+                                    {{#if unallocated_students}}
+                                    <tbody>
+                                        {{#each unallocated_students}}
+                                        <tr id="allocate_label{{@index}}">
+                                            <th scope="row">{{inc @index}}</th>
+                                            <td>{{this}}</td>
+                                            <td><button type="button" onclick="allocateStudents({{@index}})"
+                                                    id="allocate{{@index}}" class="btn btn-primary" name="allocate"
+                                                    value="{{this}}">Allocate</button></td>
+                                        </tr>
+                                        {{/each}}
+                                    </tbody>
+                                    {{/if}}
+                                </table>
+                                <small class="fail" id="Prompt"></small>
+                                <button type="button" class="btn btn-secondary right"
+                                    data-dismiss="modal">Close</button>
+                            </div>
+                            <div class="modal-footer">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{#if permission}}
+                <button type="submit" class="btn btn-primary-red" data-toggle="modal"
+                    data-target="#student_deallocation" data-whatever="@mdo">
+                    Deallocate Student
+                </button>
+                {{/if}}
+                <div class="modal fade" id="student_deallocation" tabindex="-1" role="dialog"
+                    aria-labelledby="allocate_student_Label" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Deallocating Students</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Username</th>
+                                            <th scope="col">Action</th>
+                                        </tr>
+                                    </thead>
+                                    {{#if allocated_students}}
+                                    <tbody>
+                                        {{#each allocated_students}}
+                                        <tr id="deallocate_label{{@index}}">
+                                            <th scope="row">{{inc @index}}</th>
+                                            <td>{{this}}</td>
+                                            <td><button type="button" onclick="deallocateStudents({{@index}})"
+                                                    id="deallocate{{@index}}" class="btn btn-primary" name="deallocate"
+                                                    value="{{this}}">Deallocate</button></td>
+                                        </tr>
+                                        {{/each}}
+                                    </tbody>
+                                    {{/if}}
+                                </table>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                            <div class="modal-footer">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <br>
+                {{#if isStudent}}
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_task"
+                    data-whatever="@mdo">Add Task</button>
+                {{/if}}
+                <div class="modal fade" id="add_task" tabindex="-1" role="dialog" aria-labelledby="add_task_Label"
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="add_task">Please enter your task name</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="/auth/add_task" method="POST">
+                                    <div class="form-group">
+                                        <label for="add_task" class="col-form-label">Task Name</label>
+                                        <input type="text" class="form-control" id="task_name" name="task_name">
+                                        <small class="success" id="add_task_success"></small>
+                                        <small class="fail" id="add_task_fail"></small>
+                                    </div>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" onclick="addTask()" class="btn btn-primary"
+                                        id="submit">Submit</button>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Expected work time button -->
+                {{#if isStudent}}
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#enter_expected_time"
+                    data-whatever="@mdo">Enter Expected Work Time</button>
+                {{/if}}
+                <div class="modal fade" id="enter_expected_time" tabindex="-1" role="dialog"
+                    aria-labelledby="expected_time_Label" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="expected_time_header">Please enter your time</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="/auth/expected_time" method="POST">
+                                    <div class="form-group">
+                                        <label for="expected_time" class="col-form-label">Expected Work Time in
+                                            hours</label>
+                                        <input type="number" class="form-control" id="expected_time" min="1"
+                                            name="expected_time">
+                                    </div>
+                                    <div class="form-group">
+                                        <small class="success" id="add_expected_time_success"></small>
+                                        <small class="fail" id="add_expected_time_fail"></small>
+                                    </div>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" onclick="addExpected()" class="btn btn-primary"
+                                        id="submit">Submit</button>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Acutal Work Time -->
+                {{#if isStudent}}
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#enter_time"
+                    data-whatever="@mdo">Enter Actual Work Time</button>
+                {{/if}}
+                <div class="modal fade" id="enter_time" tabindex="-1" role="dialog" aria-labelledby="enter_time_Label"
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="enter_time">Please enter your time</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+
+                            </div>
+                            <div class="modal-body">
+                                <form action="/auth/enter_actual_time" method="POST">
+                                    <div class="form-group">
+                                        <label for="start_time" class="col-form-label">Start Time</label>
+                                        <input type="datetime-local" class="form-control" id="start_time"
+                                            name="start_time">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="end_time" class="col-form-label">End Time</label>
+                                        <input type="datetime-local" class="form-control" id="end_time" name="end_time">
+                                        <small class="success" id="add_time_success"></small>
+                                        <small class="fail" id="add_time_fail"></small>
+                                    </div>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" onclick="addActual()" class="btn btn-primary"
+                                        id="submit">Submit</button>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                {{!-- add comment button --}}
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_comment"
+                    data-whatever="@mdo">Add Comment</button>
+                <div class="modal fade" id="add_comment" tabindex="-1" role="dialog" aria-labelledby="add_comment_Label"
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="add_comment">Please enter a comment</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="/auth/add_comment" method="POST">
+                                    <div class="form-group">
+                                        <label for="add_comment" class="col-form-label">Comment:</label>
+                                        <textarea class="form-control" id="comment_context" name="comment_context"></textarea>
+                                        <small class="success" id="add_comment_success"></small>
+                                        <small class="fail" id="add_comment_fail"></small>
+                                    </div>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" onclick="addComment()" class="btn btn-primary"
+                                        id="submit">Submit</button>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--Task Container-->
+                <div class="contaier">
+                    <br>
+                    {{#if task}}
+                    {{#each task}}
+                    <button type="button" onclick="changeTask({{@index}})" class="btn btn-primary" name="task{{@index}}"
+                        value="{{@index}}">{{this}}</button></td>
+                    {{/each}}
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+        <table class="columns">
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <tr>
+            <td>
+                <div id="expected_time_chart" style="border: 2px solid #ccc"></div>
+            </td>
+            <td>
+                <div id="actual_time_chart" style="border: 2px solid #ccc"></div>
+            </td>
+        </tr>
+    </table>
+
+    {{!-- comment Container --}}
+    <div class="contaier" id="comment_container">
+        <table class="table" border="1">
+        <thead>
+            <tr>
+            <th scope="col" id="col_num_comment"># of comment</th>
+            <th scope="col" id="col_context_comment">Comment</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#if comment}}
+            {{#each comment}}
+            <tr>
+            <td><label for="index_comment" id="index_comment">{{@index}}</label></td>
+            <td><label for="comment_output" id="comment_output">{{this}}</label></td>
+            </form>
+            </tr>
+            {{/each}}
+            {{/if}}
+        </tbody>
+        </table>
+    </div>
+
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"></script>
+    <script src="add_task.js"></script>
+    <script src="add_comment.js"></script>
+    <script src="student_allocation.js"></script>
+    <script src="time_graph.js"></script>
+</body>
+
+</html>

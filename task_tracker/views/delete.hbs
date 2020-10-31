@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <!-- adding MDL and its .css -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+  <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+  <!-- reflow page content depending on device -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- controlling layout on mobile -->
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <!-- specify character encoding -->
+  <meta charset="utf-8">
+  <title>Delete</title>
+</head>
+
+<body>
+
+  <!-- Always shows a header, even in smaller screens. -->
+  <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header class="mdl-layout__header">
+      <div class="mdl-layout__header-row">
+        <!-- Title -->
+        <span class="mdl-layout-title">Student Task Tracker</span>
+        <!-- Add spacer, to align navigation to the right -->
+        <div class="mdl-layout-spacer"></div>
+        <!-- Navigation. We hide it in small screens. -->
+        <nav class="mdl-navigation mdl-layout--large-screen-only">
+          <a class="mdl-navigation__link" href="">Home</a>
+          <a class="mdl-navigation__link" href="">Profile</a>
+          <a class="mdl-navigation__link" href="">Login</a>
+          <!-- <a class="mdl-navigation__link" href="">Logout</a>  -->
+        </nav>
+      </div>
+    </header>
+  
+
+    <main class="mdl-layout_content">
+
+        <!-- main content is from here 
+        <table border="1px">
+  <thead>
+    <tr>
+      <th>Index</th>
+      <th>Project Name</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each projectNameList}}
+    <tr>
+      <th>{{@Index}}</th>
+      <th></th>
+      <th></th>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+-->
+     <form action="/auth/delete" method="POST">
+       <label for="project_name">Project Name:</label>
+       <input type="text" id="project_name" name="project_name"><br><br>
+       <label for="confirm_project_name">Confirm Project Name:</label>
+       <input type="text" id="confirm_project_name" name="confirm_project_name"><br>
+       <small>Once deleted, you will not be able to retrieve it back</small>
+       <br><br>
+       {{#if prompt}}
+       <small class="fail">{{prompt}}</small>
+       {{else if success}}
+       <small class="success">{{success}}</small>
+       {{/if}}
+       <br><br>
+       <button type="submit" class="btn btn-primary">Delete</button>
+     </form>
+  
+    </main>
+  </div>
+
+</body>
+
+</html>

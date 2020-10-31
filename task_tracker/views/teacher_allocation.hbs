@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <nav>
+         <h4><img src="/images/MonashLogo.png" height="50px">&emsp; Welcome Lecturer</h4>
+        <ul>
+            <li><a href="/create_project" class="btn btn-outline-light">Project</a></li>
+            <li><a href="/teacher_allocation" class="btn btn-outline-light">Teacher Allocation</a></li>
+            <li><a href="/delete_account" class="btn btn-outline-light">Delete Account</a></li>
+            <li>
+                <form action="/auth/logout" method="POST">
+                    <button type="submit" class="btn btn-outline-light">Log out</button>
+                </form>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                Teacher Allocation
+            </div>
+            <div class="card-body">
+                <form action="/auth/teacher_allocation" method="POST">
+                    <div class="form-group">
+                        <label for="username">Teacher's Username</label>
+                        <input type="text" class="form-control" id="teacherName" name="teacherName">
+                        {{#if prompt}}
+                        <small class="fail">{{prompt}}</small>
+                        {{else if success}}
+                        <small class="success">{{success}}</small>
+                        {{/if}}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Upgrade Permissions</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
